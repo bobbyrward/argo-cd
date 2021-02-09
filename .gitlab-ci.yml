@@ -1,0 +1,31 @@
+include:
+  - project: "domaintools/platform/gitlab-template"
+    file: "templates/image-namer.yml"
+  - project: "domaintools/platform/gitlab-template"
+    file: "templates/rollout.yml"
+  - project: "domaintools/platform/gitlab-template"
+    file: "templates/docker.yml"
+  - project: "domaintools/platform/gitlab-template"
+    file: "templates/build.yml"
+  - project: "domaintools/platform/gitlab-template"
+    file: "templates/tag.yml"
+
+stages:
+  - prebuild
+  - test
+  - build
+  - postbuild
+  - rollout
+  - release
+
+variables:
+  PUSH_ECR: "true"
+
+  #push tag without default build
+  BUILD_DISABLED: "true"
+
+build:
+  extends: .docker
+  dependencies:
+    - get-image-name
+
