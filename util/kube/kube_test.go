@@ -61,7 +61,7 @@ func TestSetLabels(t *testing.T) {
 		err := yaml.Unmarshal([]byte(yamlStr), &obj)
 		assert.Nil(t, err)
 
-		err = SetAppInstanceLabel(&obj, common.LabelKeyAppInstance, "my-app")
+		err = SetAppInstanceIdentifier(&obj, common.LabelKeyAppInstance, "my-app")
 		assert.Nil(t, err)
 
 		manifestBytes, err := json.MarshalIndent(obj.Object, "", "  ")
@@ -90,7 +90,7 @@ func TestSetLegacyLabels(t *testing.T) {
 		err := yaml.Unmarshal([]byte(yamlStr), &obj)
 		assert.Nil(t, err)
 
-		err = SetAppInstanceLabel(&obj, common.LabelKeyLegacyApplicationName, "my-app")
+		err = SetAppInstanceIdentifier(&obj, common.LabelKeyLegacyApplicationName, "my-app")
 		assert.Nil(t, err)
 
 		manifestBytes, err := json.MarshalIndent(obj.Object, "", "  ")
@@ -100,11 +100,9 @@ func TestSetLegacyLabels(t *testing.T) {
 		var depV1Beta1 extv1beta1.Deployment
 		err = json.Unmarshal(manifestBytes, &depV1Beta1)
 		assert.Nil(t, err)
-		assert.Equal(t, 1, len(depV1Beta1.Spec.Selector.MatchLabels))
-		assert.Equal(t, "nginx", depV1Beta1.Spec.Selector.MatchLabels["app"])
-		assert.Equal(t, 2, len(depV1Beta1.Spec.Template.Labels))
-		assert.Equal(t, "nginx", depV1Beta1.Spec.Template.Labels["app"])
-		assert.Equal(t, "my-app", depV1Beta1.Spec.Template.Labels[common.LabelKeyLegacyApplicationName])
+		assert.Nil(t, depV1Beta1.Spec.Selector.Matchlabels)
+		assert.Equal(t, 1, len(depV1Beta1.Spec.Template.Annotations))
+		assert.Equal(t, "my-app", depV1Beta1.Spec.Template.Annotations[common.LabelKeyLegacyApplicationName])
 	}
 }
 
@@ -114,7 +112,7 @@ func TestSetLegacyJobLabel(t *testing.T) {
 	var obj unstructured.Unstructured
 	err = yaml.Unmarshal(yamlBytes, &obj)
 	assert.Nil(t, err)
-	err = SetAppInstanceLabel(&obj, common.LabelKeyLegacyApplicationName, "my-app")
+	err = SetAppInstanceIdentifier(&obj, common.LabelKeyLegacyApplicationName, "my-app")
 	assert.Nil(t, err)
 
 	manifestBytes, err := json.MarshalIndent(obj.Object, "", "  ")
@@ -140,7 +138,7 @@ func TestSetSvcLabel(t *testing.T) {
 	var obj unstructured.Unstructured
 	err = yaml.Unmarshal(yamlBytes, &obj)
 	assert.Nil(t, err)
-	err = SetAppInstanceLabel(&obj, common.LabelKeyAppInstance, "my-app")
+	err = SetAppInstanceIdentifier(&obj, common.LabelKeyAppInstance, "my-app")
 	assert.Nil(t, err)
 
 	manifestBytes, err := json.MarshalIndent(obj.Object, "", "  ")

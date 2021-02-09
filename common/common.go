@@ -116,6 +116,9 @@ const (
 	// AnnotationCompareOptions is a comma-separated list of options for comparison
 	AnnotationCompareOptions = "argocd.argoproj.io/compare-options"
 
+	// AnnotationAnnotationMarker indicates whether the application uses an annotation or a label to track the application name
+	AnnotationAnnotationMarker = "argocd.argoproj.io/annotation-marker"
+
 	// AnnotationKeyRefresh is the annotation key which indicates that app needs to be refreshed. Removed by application controller after app is refreshed.
 	// Might take values 'normal'/'hard'. Value 'hard' means manifest cache and target cluster state cache should be invalidated before refresh.
 	AnnotationKeyRefresh = "argocd.argoproj.io/refresh"
